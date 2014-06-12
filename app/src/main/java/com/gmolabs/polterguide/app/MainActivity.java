@@ -23,8 +23,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         actionBar=getActionBar();
         try {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowHomeEnabled(false);
         } catch (Exception exception) {
-            Log.d("polterguided", "couldn't set mode actionbartabs");
+            Log.d("polterguided", "couldn't config action bar");
         }
 
 
@@ -58,11 +60,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         });
 
         ActionBar.Tab tab1 = actionBar.newTab();
-        tab1.setText("Record");
+//        tab1.setText("Record");
+        tab1.setIcon(R.drawable.ic_action_mic);
         tab1.setTabListener(this);
 
         ActionBar.Tab tab2 = actionBar.newTab();
-        tab2.setText("Browse");
+//        tab2.setText("Browse");
+        tab2.setIcon(R.drawable.ic_action_headphones);
         tab2.setTabListener(this);
 
 //        ActionBar.Tab tab3 = actionBar.newTab();
