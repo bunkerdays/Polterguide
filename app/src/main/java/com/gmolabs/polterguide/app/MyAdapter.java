@@ -5,12 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 /**
- * Created by geoffmorris on 6/9/14.
+ * Created by Geoffrey Clark Morris on 6/9/14.
  */
 public class MyAdapter extends FragmentPagerAdapter {
 
-    public MyAdapter(FragmentManager supportFragmentManager) {
-        super(supportFragmentManager);
+    private static int NUM_ITEMS = 2;
+
+    public MyAdapter(FragmentManager fm) {
+        super(fm);
     }
 
     @Override
@@ -28,6 +30,6 @@ public class MyAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return NUM_ITEMS;
     }
 }

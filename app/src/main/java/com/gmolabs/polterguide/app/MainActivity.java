@@ -14,13 +14,20 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     ActionBar actionBar;
     ViewPager viewPager;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         actionBar=getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        try {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        } catch (Exception exception) {
+            Log.d("polterguided", "couldn't set mode actionbartabs");
+        }
+
+
 
         viewPager = (ViewPager) findViewById(R.id.pager);
 
@@ -34,22 +41,21 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             @Override
             public void onPageSelected(int position) {
-                Log.d("polterguide", "onPageSelected at position"+position);
+//                Log.d("polterguide", "onPageSelected at position"+position);
                 actionBar.setSelectedNavigationItem(position);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
                 if(state==ViewPager.SCROLL_STATE_IDLE) {
-                    Log.d("polterguide", "onPageScrollStateChanged IDLE");
+//                    Log.d("polterguide", "onPageScrollStateChanged IDLE");
                 } else if(state==ViewPager.SCROLL_STATE_DRAGGING) {
-                    Log.d("polterguide", "onPageScrollStateChanged DRAGGING");
+//                    Log.d("polterguide", "onPageScrollStateChanged DRAGGING");
                 } else if(state==ViewPager.SCROLL_STATE_SETTLING) {
-                    Log.d("polterguide", "onPageScrollStateChanged SETTLING");
+//                    Log.d("polterguide", "onPageScrollStateChanged SETTLING");
                 }
             }
         });
-
 
         ActionBar.Tab tab1 = actionBar.newTab();
         tab1.setText("Record");
@@ -66,7 +72,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         actionBar.addTab(tab1);
         actionBar.addTab(tab2);
 //        actionBar.addTab(tab3);
-
     }
 
 

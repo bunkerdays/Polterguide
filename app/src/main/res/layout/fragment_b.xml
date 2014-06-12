@@ -1,15 +1,12 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ccaacc"
-    tools:context="com.gmolabs.polterguide.app.FragmentA">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_margin="@dimen/abc_action_bar_icon_vertical_padding"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment_b" />
+    <ListView android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/list">
+    </ListView>
 
-</FrameLayout>
+</LinearLayout>
