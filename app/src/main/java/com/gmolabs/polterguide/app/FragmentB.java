@@ -5,6 +5,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -14,13 +17,34 @@ public class FragmentB extends android.support.v4.app.ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2",  "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2" ,  "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2" };
+
+        String jsonInput = "[\"one\",\"two\",\"three\",\"four\",\"five\",\"six\",\"seven\",\"eight\",\"nine\",\"ten\"]";
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(jsonInput);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        int length = jsonArray.length();
+        String[] values = new String[] {};
+//        List<String> listContents = new ArrayList<String>(length);
+        for (int i = 0; i < length; i++)
+        {
+            try {
+                values[i] = jsonArray.getString(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+//        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+//                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+//                "Linux", "OS/2",  "Android", "iPhone", "WindowsMobile",
+//                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+//                "Linux", "OS/2" ,  "Android", "iPhone", "WindowsMobile",
+//                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+//                "Linux", "OS/2" };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);

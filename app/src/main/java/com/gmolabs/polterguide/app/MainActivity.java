@@ -1,12 +1,15 @@
 package com.gmolabs.polterguide.app;
 
 import android.app.ActionBar;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.lang.reflect.Method;
 
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -76,6 +79,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         actionBar.addTab(tab1);
         actionBar.addTab(tab2);
 //        actionBar.addTab(tab3);
+
+        forceTabs();
     }
 
 
@@ -118,6 +123,27 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(final Configuration config) {
+        super.onConfigurationChanged(config);
+        forceTabs(); // Ensure tabs are still forced after orientation changes.
+    }
+
+    // This is where the magic happens!
+    public void forceTabs() {
+        try {
+            final ActionBar actionBar = getActionBar();
+            final Method setHasEmbeddedTabsMethod = actionBar.getClass()
+                    .getDeclaredMethod("setHasEmbeddedTabs", boolean.class);
+            setHasEmbeddedTabsMethod.setAccessible(true);
+            setHasEmbeddedTabsMethod.invoke(actionBar, true);
+        }
+        catch(final Exception e) {
+            // Handle issues as needed: log, warn user, fallback etc
+            // Alternatively, ignore this and default tab behaviour will apply.
+        }
     }
 
 }
