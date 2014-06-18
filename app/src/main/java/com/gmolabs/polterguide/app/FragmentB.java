@@ -5,8 +5,10 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 
 
 /**
@@ -16,35 +18,34 @@ import org.json.JSONException;
 public class FragmentB extends android.support.v4.app.ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+
+        // Create a reference to a Firebase location
+        Firebase ref = new Firebase("https://polterguide.firebaseio.com/");
+
+        // Write data to Firebase
+        ref.setValue("Sup homies. I'm data.");
+
+        // Read data and react to changes
+        ref.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot snap) {
+                System.out.println(snap.getName() + " -> " + snap.getValue());
+            }
+
+            @Override public void onCancelled(FirebaseError error) { }
+        });
+
+
         super.onActivityCreated(savedInstanceState);
 
-        String jsonInput = "[\"one\",\"two\",\"three\",\"four\",\"five\",\"six\",\"seven\",\"eight\",\"nine\",\"ten\"]";
-        JSONArray jsonArray = null;
-        try {
-            jsonArray = new JSONArray(jsonInput);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        int length = jsonArray.length();
-        String[] values = new String[] {};
-//        List<String> listContents = new ArrayList<String>(length);
-        for (int i = 0; i < length; i++)
-        {
-            try {
-                values[i] = jsonArray.getString(i);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-//        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-//                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-//                "Linux", "OS/2",  "Android", "iPhone", "WindowsMobile",
-//                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-//                "Linux", "OS/2" ,  "Android", "iPhone", "WindowsMobile",
-//                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-//                "Linux", "OS/2" };
+        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                "Linux", "OS/2",  "Android", "iPhone", "WindowsMobile",
+                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                "Linux", "OS/2" ,  "Android", "iPhone", "WindowsMobile",
+                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                "Linux", "OS/2" };
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_list_item_1, values);
         setListAdapter(adapter);
