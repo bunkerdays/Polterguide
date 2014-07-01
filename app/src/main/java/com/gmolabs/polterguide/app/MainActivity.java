@@ -17,11 +17,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     ActionBar actionBar;
     ViewPager viewPager;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         actionBar=getActionBar();
         try {
@@ -81,6 +81,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //        actionBar.addTab(tab3);
 
         forceTabs();
+
+
     }
 
 

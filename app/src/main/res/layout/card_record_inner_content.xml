@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/colorBorder"
+        android:background="@drawable/card_background"
+        android:layout_width="10dp"
+        android:layout_height="@dimen/card_base_empty_height"/>
+
+    <!-- Use same ID to use built-in features -->
+
+    <RelativeLayout
+        android:layout_alignParentRight="@id/colorBorder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <!-- Use same ID to use built-in features -->
+        <!--<TextView-->
+
+            <!--style="@android:style/TextAppearance.DeviceDefault.Large"-->
+            <!--android:id="@+id/card_main_inner_primary_title"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
+
+        <!-- Use same ID to use built-in features -->
+
+        <TextView
+            style="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:textColor="@android:color/darker_gray"
+            android:id="@+id/card_main_inner_secondary_title"
+            android:layout_marginLeft="10dp"
+            android:textSize="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/card_main_inner_secondary_title">
+
+            <!--<ImageView-->
+                <!--android:id="@+id/recPin"-->
+                <!--android:layout_width="16dp"-->
+                <!--android:layout_height="16dp"-->
+                <!--android:src="@drawable/ic_map_pin"/>-->
+
+            <TextView
+                style="@android:style/TextAppearance.DeviceDefault.Small"
+                android:textColor="@android:color/darker_gray"
+                android:id="@+id/card_main_inner_tertiary_title"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
