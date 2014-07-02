@@ -27,19 +27,27 @@
 
         <!-- Use same ID to use built-in features -->
 
-        <TextView
-            style="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:textColor="@android:color/darker_gray"
-            android:id="@+id/card_main_inner_secondary_title"
-            android:layout_marginLeft="10dp"
+        <!--<TextView-->
+            <!--style="@android:style/TextAppearance.DeviceDefault.Medium"-->
+            <!--android:textColor="@android:color/darker_gray"-->
+            <!--android:id="@+id/card_main_inner_secondary_title"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:textSize="40dp"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
+        <Chronometer
+            android:id="@+id/chronometer1"
             android:textSize="40dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@android:color/secondary_text_dark"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
+
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/card_main_inner_secondary_title">
+            android:layout_below="@id/chronometer1">
 
             <!--<ImageView-->
                 <!--android:id="@+id/recPin"-->

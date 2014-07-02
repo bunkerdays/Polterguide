@@ -1,13 +1,19 @@
 package com.gmolabs.polterguide.app;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Chronometer;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import java.lang.reflect.Method;
 
@@ -16,6 +22,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     ActionBar actionBar;
     ViewPager viewPager;
+    Chronometer mChrono;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             Log.d("polterguided", "couldn't config action bar");
         }
 
+
+
+
+
+
+
+        mChrono = (Chronometer) findViewById(R.id.chronometer1);
 
 
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -83,6 +97,35 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         forceTabs();
 
 
+    }
+
+
+    public void onToggleClicked(View view) {
+        // Is the toggle on?
+        boolean on = ((ToggleButton) view).isChecked();
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+
+
+        mChrono = (Chronometer) findViewById(R.id.chronometer1);
+
+        if (on) {
+            // Enable vibrate
+//            CharSequence text = "Recording";
+//            Toast toast = Toast.makeText(context, text, duration);
+//            toast.show();
+
+            mChrono.setBase(SystemClock.elapsedRealtime());
+            mChrono.start();
+
+        } else {
+//            // Disable vibrate
+//            CharSequence text = "Finished";
+//            Toast toast = Toast.makeText(context, text, duration);
+//            toast.show();
+
+              mChrono.stop();
+        }
     }
 
 

@@ -16,4 +16,16 @@
         android:layout_marginTop="12dp"
         card:card_layout_resourceID="@layout/card_layout"/>
 
+    <ToggleButton
+        android:layout_width="110dp"
+        android:layout_height="105dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/recordToggle"
+        android:layout_gravity="center_horizontal|bottom"
+        android:checked="false"
+        android:textOff="Record"
+        android:onClick="onToggleClicked"
+        android:textOn="Stop" />
+
+
 </FrameLayout>

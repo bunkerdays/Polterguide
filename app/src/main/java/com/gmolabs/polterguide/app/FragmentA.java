@@ -20,6 +20,7 @@ import it.gmariotti.cardslib.library.view.CardView;
 public class FragmentA extends android.support.v4.app.Fragment {
 
 
+
     public FragmentA() {
         // Required empty public constructor
         super();
@@ -42,6 +43,7 @@ public class FragmentA extends android.support.v4.app.Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
 
         Context mContext = getActivity().getApplicationContext();
 

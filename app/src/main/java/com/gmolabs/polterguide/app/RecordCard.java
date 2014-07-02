@@ -3,6 +3,7 @@ package com.gmolabs.polterguide.app;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Chronometer;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -15,11 +16,10 @@ public class RecordCard extends Card {
 
 
 //    protected TextView mTitle;
-    protected TextView mRecTimeTitle;
     protected TextView mLocationTitle;
     protected RatingBar mRatingBar;
-    protected String mRecTime;
     protected String mLocationString;
+    public Chronometer mChrono;
 
     /**
      * Constructor with a custom inner layout
@@ -39,13 +39,6 @@ public class RecordCard extends Card {
         init();
     }
 
-    public String getRecTime() {
-        return mRecTime;
-    }
-    public void setRecTime(String t) {
-        mRecTime = t;
-    }
-
     /**
      * Init
      */
@@ -61,7 +54,6 @@ public class RecordCard extends Card {
 //                }
 //            });
 
-        setRecTime("00:00:00");
     }
 
     @Override
@@ -69,15 +61,15 @@ public class RecordCard extends Card {
 
         //Retrieve elements
 //        mTitle = (TextView) parent.findViewById(R.id.card_main_inner_primary_title);
-        mRecTimeTitle = (TextView) parent.findViewById(R.id.card_main_inner_secondary_title);
+//        mRecTimeTitle = (TextView) parent.findViewById(R.id.card_main_inner_secondary_title);
         mLocationTitle = (TextView) parent.findViewById(R.id.card_main_inner_tertiary_title);
 //            mRatingBar = (RatingBar) parent.findViewById(R.id.carddemo_myapps_main_inner_ratingBar);
 
 //        if (mTitle!=null)
 //            mTitle.setText(R.string.record_title);
 
-        if (mRecTimeTitle!=null)
-            mRecTimeTitle.setText(mRecTime);
+//        if (mRecTimeTitle!=null)
+//            mRecTimeTitle.setText(mRecTime);
 
 
         if (mLocationTitle!=null)
