@@ -58,7 +58,7 @@
             <TextView
                 style="@android:style/TextAppearance.DeviceDefault.Small"
                 android:textColor="@android:color/darker_gray"
-                android:id="@+id/card_main_inner_tertiary_title"
+                android:id="@+id/locationTitle"
                 android:layout_marginLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

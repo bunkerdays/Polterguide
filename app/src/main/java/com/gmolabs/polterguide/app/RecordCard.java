@@ -62,7 +62,7 @@ public class RecordCard extends Card {
         //Retrieve elements
 //        mTitle = (TextView) parent.findViewById(R.id.card_main_inner_primary_title);
 //        mRecTimeTitle = (TextView) parent.findViewById(R.id.card_main_inner_secondary_title);
-        mLocationTitle = (TextView) parent.findViewById(R.id.card_main_inner_tertiary_title);
+        mLocationTitle = (TextView) parent.findViewById(R.id.locationTitle);
 //            mRatingBar = (RatingBar) parent.findViewById(R.id.carddemo_myapps_main_inner_ratingBar);
 
 //        if (mTitle!=null)
