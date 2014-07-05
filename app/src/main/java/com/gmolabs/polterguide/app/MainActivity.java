@@ -2,7 +2,9 @@ package com.gmolabs.polterguide.app;
 
 import android.app.ActionBar;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
@@ -11,6 +13,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -22,6 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -156,6 +163,73 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         mLocationClient = new LocationClient(this, this, this);
 
 
+        //firebase stuff
+        // Create a reference to a Firebase location
+        Firebase ref = new Firebase("https://polterguide.firebaseio.com/");
+//        SimpleLogin authClient = new SimpleLogin(ref, getApplicationContext());
+
+
+
+//        authClient.checkAuthStatus(new SimpleLoginAuthenticatedHandler() {
+//            public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
+//                if (error != null) {
+//                    // Oh no! There was an error performing the check
+//                    Toast.makeText(getApplicationContext(),"Oh no! There was an error performing the check", Toast.LENGTH_SHORT).show();
+//
+//                } else if (user == null) {
+//                    // No user is logged in
+//                    Toast.makeText(getApplicationContext(),"No user is logged in", Toast.LENGTH_SHORT).show();
+//
+//                } else {
+//                    // There is a logged in user
+//                    Toast.makeText(getApplicationContext(),"There is a logged in user: "+user.toString(), Toast.LENGTH_SHORT).show();
+//
+//                }
+//            }
+//        });
+
+//        authClient.createUser("geoffm@gmail.com", "c4s4l1m0n", new SimpleLoginAuthenticatedHandler() {
+//            public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
+//                if(error != null) {
+//                    // There was an error creating this account
+//                    Toast.makeText(getApplicationContext(),"There was an error creating this account", Toast.LENGTH_SHORT).show();
+//                }
+//                else {
+//                    // account created
+//                    Toast.makeText(getApplicationContext(),"account created", Toast.LENGTH_SHORT).show();
+//
+//                }
+//            }
+//        });
+
+//        Firebase authRef = ref.getRoot().child(".info/authenticated");
+//        authRef.addValueEventListener(new ValueEventListener() {
+//            public void onDataChange(DataSnapshot snap) {
+//                boolean isAuthenticated = snap.getValue(Boolean.class);
+//            }
+//            public void onCancelled(FirebaseError error) {}
+//        });
+
+
+        // Write data to Firebase
+        ref.setValue("Sup homies. I'm data.");
+
+        //
+        //prefs stuff
+        //addPreferencesFromResource(R.xml.preference);
+
+        // Read data and react to changes
+        ref.addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(DataSnapshot snap) {
+                System.out.println(snap.getName() + " -> " + snap.getValue());
+            }
+
+            @Override public void onCancelled(FirebaseError error) { }
+        });
+
+
     }
 
 
@@ -224,9 +298,37 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+
+            Intent intent = new Intent();
+            intent.setClass(MainActivity.this, SetPreferenceActivity.class);
+            startActivityForResult(intent, 0);
+
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // TODO Auto-generated method stub
+        //super.onActivityResult(requestCode, resultCode, data);
+
+  /*
+   * To make it simple, always re-load Preference setting.
+   */
+
+        loadPref();
+    }
+
+    private void loadPref(){
+        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+//        boolean my_checkbox_preference = mySharedPreferences.getBoolean("checkbox_preference", false);
+//        prefCheckBox.setChecked(my_checkbox_preference);
+//
+//        String my_edittext_preference = mySharedPreferences.getString("edittext_preference", "");
+//        prefEditText.setText(my_edittext_preference);
+
     }
 
     @Override
@@ -253,7 +355,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     @Override
     public void onConnected(Bundle bundle) {
         // Display the connection status
-        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
 
         mCurrentLocation = mLocationClient.getLastLocation();
 
@@ -273,15 +375,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
              */
             (new GetAddressTask(this)).execute(mCurrentLocation);
         }
-        Toast.makeText(this, mCurrentLocation.toString(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, mCurrentLocation.toString(), Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onDisconnected() {
         // Display the connection status
-        Toast.makeText(this, "Disconnected. Please re-connect.",
-                Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Disconnected. Please re-connect.",
+//                Toast.LENGTH_SHORT).show();
 
     }
 
@@ -411,8 +513,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             // Set activity indicator visibility to "gone"
 //            mActivityIndicator.setVisibility(View.GONE);
             // Display the results of the lookup.
-            Toast.makeText(mContext, address, Toast.LENGTH_SHORT).show();
-
+//            Toast.makeText(mContext, address, Toast.LENGTH_SHORT).show();
+//
             mAddress = (TextView) findViewById(R.id.locationTitle);
             mAddress.setText(address);
         }

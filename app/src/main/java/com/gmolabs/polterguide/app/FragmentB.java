@@ -19,22 +19,7 @@ public class FragmentB extends android.support.v4.app.ListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
 
-        // Create a reference to a Firebase location
-        Firebase ref = new Firebase("https://polterguide.firebaseio.com/");
 
-        // Write data to Firebase
-        ref.setValue("Sup homies. I'm data.");
-
-        // Read data and react to changes
-        ref.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot snap) {
-                System.out.println(snap.getName() + " -> " + snap.getValue());
-            }
-
-            @Override public void onCancelled(FirebaseError error) { }
-        });
 
 
         super.onActivityCreated(savedInstanceState);

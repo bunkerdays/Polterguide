@@ -69,5 +69,8 @@
     <string name="unknown_activity_request_code">
         Received an unknown activity request code %1$d in onActivityResult.
     </string>
+    <string name="title_edittext_preference">Choose Username</string>
+    <string name="summary_edittext_preference">This will be your Polterguide username</string>
+    <string name="dialog_title_edittext_preference">Log In</string>
 
 </resources>
