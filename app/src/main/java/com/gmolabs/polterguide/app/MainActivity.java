@@ -79,6 +79,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         if(user=="NO_USER"||user=="") {
             FragmentManager fm = getSupportFragmentManager();
             LoginDialogFragment mLoginDialog = new LoginDialogFragment();
+            mLoginDialog.setCancelable(false);
+
             mLoginDialog.show(fm, "dialog_signin");
         }
     }
