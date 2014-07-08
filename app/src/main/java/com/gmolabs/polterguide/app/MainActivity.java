@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
@@ -69,6 +70,17 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         super.onStart();
         // Connect the client.
         mLocationClient.connect();
+        //launch the login screen
+        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+//        boolean my_checkbox_preference = mySharedPreferences.getBoolean("checkbox_preference", false);
+//        prefCheckBox.setChecked(my_checkbox_preference);
+//
+        String user = mySharedPreferences.getString("username", "NO_USER");
+        if(user=="NO_USER"||user=="") {
+            FragmentManager fm = getSupportFragmentManager();
+            LoginDialogFragment mLoginDialog = new LoginDialogFragment();
+            mLoginDialog.show(fm, "dialog_signin");
+        }
     }
 
     /*
@@ -230,7 +242,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         });
 
 
+
     }
+
+
+
+
+
+
 
 
     public void onToggleClicked(View view) {
@@ -303,6 +322,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             intent.setClass(MainActivity.this, SetPreferenceActivity.class);
             startActivityForResult(intent, 0);
 
+
+
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -321,13 +342,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     private void loadPref(){
-        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-//        boolean my_checkbox_preference = mySharedPreferences.getBoolean("checkbox_preference", false);
-//        prefCheckBox.setChecked(my_checkbox_preference);
+//        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 //
-//        String my_edittext_preference = mySharedPreferences.getString("edittext_preference", "");
-//        prefEditText.setText(my_edittext_preference);
+////        boolean my_checkbox_preference = mySharedPreferences.getBoolean("checkbox_preference", false);
+////        prefCheckBox.setChecked(my_checkbox_preference);
+////
+//        String defValue = "Ghost# ";
+//        int r = (int) (Math.random()*100);
+//        defValue += r;
+//        SharedPreferences.Editor editor1 = mySharedPreferences.edit();
+//        editor1.putString("username",defValue);
+//        editor1.commit();
+//        String my_edittext_preference = mySharedPreferences.getString("username", defValue);
+//        Toast.makeText(this, my_edittext_preference, Toast.LENGTH_SHORT).show();
 
     }
 

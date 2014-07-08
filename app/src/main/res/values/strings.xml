@@ -72,5 +72,15 @@
     <string name="title_edittext_preference">Choose Username</string>
     <string name="summary_edittext_preference">This will be your Polterguide username</string>
     <string name="dialog_title_edittext_preference">Log In</string>
+    <string name="username">username</string>
+    <string name="username_title">Create Username</string>
+    <string name="fire">Fire!</string>
+    <string name="cancel">Cancel</string>
+    <string name="password">password</string>
+    <string name="signin">Sign In</string>
+    <string name="signup_title">Create Username</string>
+    <string name="signup_message">This will be your Polterguide user name.</string>
+    <string name="ok">ok</string>
+
 
 </resources>

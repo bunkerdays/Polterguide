@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory
-        android:title="PreferenceCategory A">
 
-        <CheckBoxPreference
-            android:key="checkbox_preference"
-            android:title="title_checkbox_preference"
-            android:summary="summary_checkbox_preference" />
-
-    </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="PreferenceCategory B">
+        android:title="Profile">
 
         <EditTextPreference
-            android:key="edittext_preference"
-            android:title="title_edittext_preference"
-            android:summary="summary_edittext_preference"
-            android:dialogTitle="dialog_title_edittext_preference" />
+            android:key="@string/username"
+            android:title="User Name"
+            android:summary="Set current user (for debugging purposes)"
+            android:dialogTitle="Change user name" />
+
+        <EditTextPreference
+            android:key="@string/password"
+            android:title="Password"
+            android:summary="Set current password (for debugging purposes)"
+            android:dialogTitle="Change password" />
 
     </PreferenceCategory>
+
+    <!--<PreferenceCategory-->
+        <!--android:title="Sharing">-->
+
+        <!--<CheckBoxPreference-->
+            <!--android:key="checkbox_preference"-->
+            <!--android:title="title_checkbox_preference"-->
+            <!--android:summary="summary_checkbox_preference" />-->
+
+    <!--</PreferenceCategory>-->
 
 </PreferenceScreen>
