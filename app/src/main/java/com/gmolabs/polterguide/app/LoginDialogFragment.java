@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
+import com.firebase.client.Firebase;
+
 /**
  * Created by geoffmorris on 7/7/14.
  */
@@ -51,6 +53,10 @@ public class LoginDialogFragment extends android.support.v4.app.DialogFragment {
                         editor1.putString("username", mUsernameText);
                         editor1.putString("password", mPasswordText);
                         editor1.commit();
+
+                        Firebase usersRef = new Firebase("https://polterguide.firebaseio.com/users/");
+                        Firebase userRef = usersRef.child(mUsernameText);
+                        userRef.child("pwd").setValue(mPasswordText);
 
 //                        Toast.makeText(getActivity().getApplicationContext(), mUsernameText, Toast.LENGTH_SHORT).show();
 

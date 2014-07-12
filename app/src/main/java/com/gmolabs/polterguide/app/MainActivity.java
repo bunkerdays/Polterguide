@@ -51,7 +51,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     // Global variable to hold the current location
     Location mCurrentLocation;
     TextView mAddress;
+    Firebase mFirebase;
 
+
+    String mCurrentUser = "";
 
 
     // Global constants
@@ -75,13 +78,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //        boolean my_checkbox_preference = mySharedPreferences.getBoolean("checkbox_preference", false);
 //        prefCheckBox.setChecked(my_checkbox_preference);
 //
-        String user = mySharedPreferences.getString("username", "NO_USER");
-        if(user=="NO_USER"||user=="") {
+        mCurrentUser = mySharedPreferences.getString("username", "NO_USER");
+        if(mCurrentUser=="NO_USER"||mCurrentUser=="") {
             FragmentManager fm = getSupportFragmentManager();
             LoginDialogFragment mLoginDialog = new LoginDialogFragment();
             mLoginDialog.setCancelable(false);
-
             mLoginDialog.show(fm, "dialog_signin");
+        } else {
+
         }
     }
 
@@ -179,61 +183,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         //firebase stuff
         // Create a reference to a Firebase location
-        Firebase ref = new Firebase("https://polterguide.firebaseio.com/");
-//        SimpleLogin authClient = new SimpleLogin(ref, getApplicationContext());
-
-
-
-//        authClient.checkAuthStatus(new SimpleLoginAuthenticatedHandler() {
-//            public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
-//                if (error != null) {
-//                    // Oh no! There was an error performing the check
-//                    Toast.makeText(getApplicationContext(),"Oh no! There was an error performing the check", Toast.LENGTH_SHORT).show();
-//
-//                } else if (user == null) {
-//                    // No user is logged in
-//                    Toast.makeText(getApplicationContext(),"No user is logged in", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//                    // There is a logged in user
-//                    Toast.makeText(getApplicationContext(),"There is a logged in user: "+user.toString(), Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }
-//        });
-
-//        authClient.createUser("geoffm@gmail.com", "c4s4l1m0n", new SimpleLoginAuthenticatedHandler() {
-//            public void authenticated(FirebaseSimpleLoginError error, FirebaseSimpleLoginUser user) {
-//                if(error != null) {
-//                    // There was an error creating this account
-//                    Toast.makeText(getApplicationContext(),"There was an error creating this account", Toast.LENGTH_SHORT).show();
-//                }
-//                else {
-//                    // account created
-//                    Toast.makeText(getApplicationContext(),"account created", Toast.LENGTH_SHORT).show();
-//
-//                }
-//            }
-//        });
-
-//        Firebase authRef = ref.getRoot().child(".info/authenticated");
-//        authRef.addValueEventListener(new ValueEventListener() {
-//            public void onDataChange(DataSnapshot snap) {
-//                boolean isAuthenticated = snap.getValue(Boolean.class);
-//            }
-//            public void onCancelled(FirebaseError error) {}
-//        });
-
-
+        mFirebase = new Firebase("https://polterguide.firebaseio.com/");
         // Write data to Firebase
-        ref.setValue("Sup homies. I'm data.");
-
-        //
-        //prefs stuff
-        //addPreferencesFromResource(R.xml.preference);
 
         // Read data and react to changes
-        ref.addValueEventListener(new ValueEventListener() {
+        mFirebase.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snap) {
@@ -249,7 +203,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
 
+    public void startRecording() {
 
+    }
+
+    public void finishRecording() {
+
+    }
 
 
 
@@ -268,7 +228,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //            CharSequence text = "Recording";
 //            Toast toast = Toast.makeText(context, text, duration);
 //            toast.show();
-
+            startRecording();
             mChrono.setBase(SystemClock.elapsedRealtime());
             mChrono.start();
 
@@ -279,6 +239,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //            toast.show();
 
               mChrono.stop();
+              finishRecording();
         }
     }
 
