@@ -54,7 +54,7 @@ public class FragmentA extends android.support.v4.app.Fragment {
         CardThumbnail thumb = new CardThumbnail(mContext);
 
 
-        thumb.setDrawableResource(R.drawable.ic_action_mic_black);
+//        thumb.setDrawableResource(R.drawable.ic_action_mic_black);
         //Add thumbnail to a card
         card.addCardThumbnail(thumb);
 

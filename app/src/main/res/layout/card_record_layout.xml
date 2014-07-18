@@ -80,6 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
+
     </FrameLayout>
 
 </LinearLayout><!-- From: file:/home/gabriele/Lavoro/Android/AndroidStudioProjects/wrks/cardslib/library/src/main/res/layout/card_thumbnail_layout.xml --><!-- From: file:/Users/geoffmorris/AndroidStudioProjects/CardTest/app/build/exploded-aar/com.github.gabrielemariotti.cards/library/1.3.0/res/layout/card_thumbnail_layout.xml -->

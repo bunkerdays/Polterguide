@@ -34,6 +34,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -52,6 +54,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     Location mCurrentLocation;
     TextView mAddress;
     Firebase mFirebase;
+
+    GoogleMap mMap;
 
 
     String mCurrentUser = "";
@@ -87,6 +91,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         } else {
 
         }
+
+//        setUpMapIfNeeded();
     }
 
     /*
@@ -99,12 +105,35 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         super.onStop();
     }
 
+    private void setUpMapIfNeeded() {
+        // Do a null check to confirm that we have not already instantiated the map.
+        if (mMap == null) {
+
+
+            SupportMapFragment mySupFrag = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+            mMap = mySupFrag.getMap();
+            mMap.setMyLocationEnabled(true);
+            // Check if we were successful in obtaining the map.
+            if (mMap != null) {
+                // The Map is verified. It is now safe to manipulate the map.
+
+            }
+        }
+    }
+
+    private void getLocation() {
+        mCurrentLocation = mMap.getMyLocation();
+        Log.d("LOCO", "Lat: "+mCurrentLocation.getLatitude()+", Lng: "+mCurrentLocation.getLongitude());
+
+    }
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         actionBar=getActionBar();
@@ -199,7 +228,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
 
-    }
+
+
+
+
+        }
 
 
 
@@ -221,6 +254,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         int duration = Toast.LENGTH_SHORT;
 
 
+
         mChrono = (Chronometer) findViewById(R.id.chronometer1);
 
         if (on) {
@@ -231,6 +265,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             startRecording();
             mChrono.setBase(SystemClock.elapsedRealtime());
             mChrono.start();
+
+            getLocation();
 
         } else {
 //            // Disable vibrate
@@ -368,6 +404,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //        Toast.makeText(this, mCurrentLocation.toString(), Toast.LENGTH_SHORT).show();
 
     }
+
 
     @Override
     public void onDisconnected() {

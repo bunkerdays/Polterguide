@@ -53,7 +53,6 @@ public class RecordCard extends Card {
 //                    Toast.makeText(getContext(), "Click Listener card=", Toast.LENGTH_LONG).show();
 //                }
 //            });
-
     }
 
     @Override
@@ -62,7 +61,12 @@ public class RecordCard extends Card {
         //Retrieve elements
 //        mTitle = (TextView) parent.findViewById(R.id.card_main_inner_primary_title);
 //        mRecTimeTitle = (TextView) parent.findViewById(R.id.card_main_inner_secondary_title);
-        mLocationTitle = (TextView) parent.findViewById(R.id.locationTitle);
+            mLocationTitle = (TextView) parent.findViewById(R.id.locationTitle);
+
+
+        // Getting reference to the SupportMapFragment of activity_main.xml
+          //  SupportMapFragment fm = (SupportMapFragment) parent.findViewById(R.id.map);
+         //   Log.d("LOCO", "mySupFrag: " + fm.toString());
 //            mRatingBar = (RatingBar) parent.findViewById(R.id.carddemo_myapps_main_inner_ratingBar);
 
 //        if (mTitle!=null)
