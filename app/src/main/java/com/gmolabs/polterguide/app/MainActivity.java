@@ -266,7 +266,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             mChrono.setBase(SystemClock.elapsedRealtime());
             mChrono.start();
 
-            getLocation();
+           // getLocation();
 
         } else {
 //            // Disable vibrate
