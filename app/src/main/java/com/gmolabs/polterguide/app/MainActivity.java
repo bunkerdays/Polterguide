@@ -1,6 +1,8 @@
 package com.gmolabs.polterguide.app;
 
 import android.app.ActionBar;
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -14,6 +16,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -34,8 +37,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -44,18 +49,26 @@ import java.util.Locale;
 
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener, GooglePlayServicesClient.ConnectionCallbacks,
-        GooglePlayServicesClient.OnConnectionFailedListener  {
+        GooglePlayServicesClient.OnConnectionFailedListener,
+        com.google.android.gms.location.LocationListener {
 
     ActionBar actionBar;
     ViewPager viewPager;
     Chronometer mChrono;
     LocationClient mLocationClient;
     // Global variable to hold the current location
+    // Define an object that holds accuracy and frequency parameters
+    LocationRequest mLocationRequest;
     Location mCurrentLocation;
+    boolean mUpdatesRequested;
+    boolean mLocSet = false;
+
     TextView mAddress;
     Firebase mFirebase;
 
     GoogleMap mMap;
+
+    FragmentManager fm;
 
 
     String mCurrentUser = "";
@@ -68,6 +81,19 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
      */
     private final static int
             CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
+
+    // Milliseconds per second
+    private static final int MILLISECONDS_PER_SECOND = 1000;
+    // Update frequency in seconds
+    public static final int UPDATE_INTERVAL_IN_SECONDS = 5;
+    // Update frequency in milliseconds
+    private static final long UPDATE_INTERVAL =
+            MILLISECONDS_PER_SECOND * UPDATE_INTERVAL_IN_SECONDS;
+    // The fastest update frequency, in seconds
+    private static final int FASTEST_INTERVAL_IN_SECONDS = 1;
+    // A fast frequency ceiling in milliseconds
+    private static final long FASTEST_INTERVAL =
+            MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
 
     /*
          * Called when the Activity becomes visible.
@@ -84,7 +110,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //
         mCurrentUser = mySharedPreferences.getString("username", "NO_USER");
         if(mCurrentUser=="NO_USER"||mCurrentUser=="") {
-            FragmentManager fm = getSupportFragmentManager();
             LoginDialogFragment mLoginDialog = new LoginDialogFragment();
             mLoginDialog.setCancelable(false);
             mLoginDialog.show(fm, "dialog_signin");
@@ -92,7 +117,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         }
 
-//        setUpMapIfNeeded();
+        //setUpMapIfNeeded();
+    }
+
+    public void setMap(GoogleMap newMap) {
+        mMap = newMap;
     }
 
     /*
@@ -105,27 +134,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         super.onStop();
     }
 
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-
-
-            SupportMapFragment mySupFrag = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
-            mMap = mySupFrag.getMap();
-            mMap.setMyLocationEnabled(true);
-            // Check if we were successful in obtaining the map.
-            if (mMap != null) {
-                // The Map is verified. It is now safe to manipulate the map.
-
+    // Define the callback method that receives location updates
+    @Override
+    public void onLocationChanged(Location location) {
+        // Report to the UI that the location was updated
+//        String msg = "Updated Location: " +
+//                Double.toString(location.getLatitude()) + "," +
+//                Double.toString(location.getLongitude());
+//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        try {
+            LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            if(!mLocSet) {
+                mLocSet = true;
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 18));
             }
+        } catch(Throwable e) {
+//            Toast.makeText(this, "initializing map first...", Toast.LENGTH_SHORT).show();
+        } finally {
+
         }
     }
 
-    private void getLocation() {
-        mCurrentLocation = mMap.getMyLocation();
-        Log.d("LOCO", "Lat: "+mCurrentLocation.getLatitude()+", Lng: "+mCurrentLocation.getLongitude());
 
-    }
 
 
 
@@ -135,8 +165,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         setContentView(R.layout.activity_main);
 
 
+        fm = getSupportFragmentManager();
 
-        actionBar=getActionBar();
+        actionBar = getActionBar();
         try {
             actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
             actionBar.setDisplayShowTitleEnabled(false);
@@ -166,11 +197,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                if(state==ViewPager.SCROLL_STATE_IDLE) {
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
 //                    Log.d("polterguide", "onPageScrollStateChanged IDLE");
-                } else if(state==ViewPager.SCROLL_STATE_DRAGGING) {
+                } else if (state == ViewPager.SCROLL_STATE_DRAGGING) {
 //                    Log.d("polterguide", "onPageScrollStateChanged DRAGGING");
-                } else if(state==ViewPager.SCROLL_STATE_SETTLING) {
+                } else if (state == ViewPager.SCROLL_STATE_SETTLING) {
 //                    Log.d("polterguide", "onPageScrollStateChanged SETTLING");
                 }
             }
@@ -208,6 +239,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
          * handle callbacks.
          */
         mLocationClient = new LocationClient(this, this, this);
+        mUpdatesRequested = true;
 
 
         //firebase stuff
@@ -223,16 +255,23 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                 System.out.println(snap.getName() + " -> " + snap.getValue());
             }
 
-            @Override public void onCancelled(FirebaseError error) { }
+            @Override
+            public void onCancelled(FirebaseError error) {
+            }
         });
 
 
+        // Create the LocationRequest object
+        mLocationRequest = LocationRequest.create();
+        // Use high accuracy
+        mLocationRequest.setPriority(
+                LocationRequest.PRIORITY_HIGH_ACCURACY);
+        // Set the update interval to 5 seconds
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        // Set the fastest update interval to 1 second
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
 
-
-
-
-
-        }
+    }
 
 
 
@@ -328,16 +367,85 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         return super.onOptionsItemSelected(item);
     }
 
+    /*
+     * Handle results returned to the FragmentActivity
+     * by Google Play services
+     */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // TODO Auto-generated method stub
-        //super.onActivityResult(requestCode, resultCode, data);
+    protected void onActivityResult(
+            int requestCode, int resultCode, Intent data) {
+        // Decide what to do based on the original request code
+        switch (requestCode) {
+//            ...
+            case CONNECTION_FAILURE_RESOLUTION_REQUEST :
+            /*
+             * If the result code is Activity.RESULT_OK, try
+             * to connect again
+             */
+                switch (resultCode) {
+                    case Activity.RESULT_OK :
+                    /*
+                     * Try the request again
+                     */
+//                        ...
+                        break;
+                    default:
+                        loadPref();
+                }
+//                ...
+        }
+//        ...
+    }
 
-  /*
-   * To make it simple, always re-load Preference setting.
-   */
+    private boolean servicesConnected() {
+        // Check that Google Play services is available
+        int resultCode =
+                GooglePlayServicesUtil.
+                        isGooglePlayServicesAvailable(this);
+        // If Google Play services is available
+        if (ConnectionResult.SUCCESS == resultCode) {
+            // In debug mode, log the status
+            Log.d("Location Updates",
+                    "Google Play services is available.");
+            // Continue
+            return true;
+            // Google Play services was not available for some reason
+        } else {
+            // Get the error code
+            int errorCode = resultCode;
+            // Get the error dialog from Google Play services
+            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(
+                    errorCode,
+                    this,
+                    CONNECTION_FAILURE_RESOLUTION_REQUEST);
+            // If Google Play services can provide an error dialog
+            if (errorDialog != null) {
+                // Create a new DialogFragment for the error dialog
+                ErrorDialogFragment errorFragment =
+                        new ErrorDialogFragment();
+                // Set the dialog in the DialogFragment
+                errorFragment.setDialog(errorDialog);
+                // Show the error dialog in the DialogFragment
+                errorFragment.show(
+                        getSupportFragmentManager(),
+                        "Location Updates");
+            }
+        }
+        return false;
+    }
 
-        loadPref();
+    private boolean isGooglePlay(){
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+        if(status == ConnectionResult.SUCCESS){
+            return true;
+
+        }else{
+            ((Dialog)GooglePlayServicesUtil.getErrorDialog(status, this, 10)).show();
+            //Toast.makeText(this, "nai", Toast.LENGTH_LONG).show();
+        }
+        return false;
+
     }
 
     private void loadPref(){
@@ -384,6 +492,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
 
         mCurrentLocation = mLocationClient.getLastLocation();
+
+        // Display the connection status
+//        Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+        // If already requested, start periodic updates
+        if (mUpdatesRequested) {
+            mLocationClient.requestLocationUpdates(mLocationRequest, this);
+        }
 
 // Ensure that a Geocoder services is available
         if (Build.VERSION.SDK_INT >=
@@ -447,6 +562,26 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             if (errorCode != ConnectionResult.SUCCESS) {
                 GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this, 0).show();
             }
+        }
+    }
+
+    // Define a DialogFragment that displays the error dialog
+    public static class ErrorDialogFragment extends DialogFragment {
+        // Global field to contain the error dialog
+        private Dialog mDialog;
+        // Default constructor. Sets the dialog field to null
+        public ErrorDialogFragment() {
+            super();
+            mDialog = null;
+        }
+        // Set the dialog to display
+        public void setDialog(Dialog dialog) {
+            mDialog = dialog;
+        }
+        // Return a Dialog to the DialogFragment.
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return mDialog;
         }
     }
 
