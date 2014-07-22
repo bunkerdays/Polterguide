@@ -53,6 +53,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         GooglePlayServicesClient.OnConnectionFailedListener,
         com.google.android.gms.location.LocationListener {
 
+    private static final int ZOOM_DEFAULT = 20;
     ActionBar actionBar;
     ViewPager viewPager;
     Chronometer mChrono;
@@ -76,6 +77,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     SharedPreferences mySharedPreferences;
 
+    Firebase usersRef;
+    Firebase userRef;
+    Firebase soundscapeRef;
+    Firebase recRef;
+    Firebase urlRef;
+    private int nRecs = 0;
+
+
 
     // Global constants
     /*
@@ -97,6 +106,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     // A fast frequency ceiling in milliseconds
     private static final long FASTEST_INTERVAL =
             MILLISECONDS_PER_SECOND * FASTEST_INTERVAL_IN_SECONDS;
+
+    private static final int MAX_ZOOM_OFFSET = 2;
 
     /*
          * Called when the Activity becomes visible.
@@ -121,6 +132,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
 
         //setUpMapIfNeeded();
+    }
+
+    public void setCurrentUser(String u) {
+        mCurrentUser = u;
     }
 
     public void setMap(GoogleMap newMap) {
@@ -162,6 +177,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     // Define the callback method that receives location updates
     @Override
     public void onLocationChanged(Location location) {
+        mCurrentLocation = location;
         // Report to the UI that the location was updated
 //        String msg = "Updated Location: " +
 //                Double.toString(location.getLatitude()) + "," +
@@ -171,7 +187,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             LatLng myLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             if(!mLocSet) {
                 mLocSet = true;
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, 18));
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLng, ZOOM_DEFAULT));
             }
         } catch(Throwable e) {
 //            Toast.makeText(this, "initializing map first...", Toast.LENGTH_SHORT).show();
@@ -179,10 +195,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         }
     }
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,6 +282,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         //firebase stuff
         // Create a reference to a Firebase location
         mFirebase = new Firebase("https://polterguide.firebaseio.com/");
+        usersRef = mFirebase.child("users");
         // Write data to Firebase
 
         // Read data and react to changes
@@ -301,11 +314,32 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
     public void startRecording() {
+        nRecs++;
+        userRef = usersRef.child(mCurrentUser);
+        if(soundscapeRef == null) {
+            soundscapeRef = userRef.child("TempSoundscape");
+        }
+        String recName = "TempRecording"+nRecs;
+        recRef = soundscapeRef.child(recName);
+        Firebase el = recRef.child("el");
+        Firebase lat = recRef.child("lat");
+        Firebase lng = recRef.child("lng");
+        Firebase url = recRef.child("url");
+        el.setValue(mCurrentLocation.getAltitude());
+        lat.setValue(mCurrentLocation.getLatitude());
+        lng.setValue(mCurrentLocation.getLongitude());
+        url.setValue(recName);
+
 
     }
 
     public void finishRecording() {
-
+        //wrap stuff up...
+        //
+        //remove fb refs...
+        //soundscapeRef = null;
+        //recRef = null;
+        //nRecs = 0;
     }
 
 

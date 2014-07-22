@@ -58,6 +58,9 @@ public class LoginDialogFragment extends android.support.v4.app.DialogFragment {
                         Firebase userRef = usersRef.child(mUsernameText);
                         userRef.child("pwd").setValue(mPasswordText);
 
+
+                        ((MainActivity) getActivity()).setCurrentUser(mUsernameText);
+
 //                        Toast.makeText(getActivity().getApplicationContext(), mUsernameText, Toast.LENGTH_SHORT).show();
 
                     }
