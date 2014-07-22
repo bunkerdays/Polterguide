@@ -18,6 +18,12 @@
             android:summary="Set current password (for debugging purposes)"
             android:dialogTitle="Change password" />
 
+        <CheckBoxPreference
+            android:key="autoflip"
+            android:title="autoflip"
+            android:defaultValue="false"
+        />
+
     </PreferenceCategory>
 
     <!--<PreferenceCategory-->

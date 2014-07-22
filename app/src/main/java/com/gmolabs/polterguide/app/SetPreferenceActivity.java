@@ -2,6 +2,7 @@ package com.gmolabs.polterguide.app;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -31,6 +32,11 @@ public class SetPreferenceActivity extends Activity implements SharedPreferences
         super.onResume();
         // Set up a listener whenever a key changes
         p.registerOnSharedPreferenceChangeListener(this);
+        if (p.getBoolean("autoflip", false)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
     }
 
     @Override
@@ -40,10 +46,14 @@ public class SetPreferenceActivity extends Activity implements SharedPreferences
         p.unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,String key)
-    {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,String key) {
         String myUser = sharedPreferences.getString("username", "DEFAULT");
         String myPass = sharedPreferences.getString("password", "DEFAULT");
+        if (sharedPreferences.getBoolean("autoflip", false)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         Firebase usersRef = new Firebase("https://polterguide.firebaseio.com/users/");
         Firebase userRef = usersRef.child(myUser);
         userRef.child("pwd").setValue(myPass);

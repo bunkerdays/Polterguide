@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.location.Address;
 import android.location.Geocoder;
@@ -73,6 +74,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     String mCurrentUser = "";
 
+    SharedPreferences mySharedPreferences;
+
 
     // Global constants
     /*
@@ -104,7 +107,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         // Connect the client.
         mLocationClient.connect();
         //launch the login screen
-        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 //        boolean my_checkbox_preference = mySharedPreferences.getBoolean("checkbox_preference", false);
 //        prefCheckBox.setChecked(my_checkbox_preference);
 //
@@ -133,6 +136,28 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         mLocationClient.disconnect();
         super.onStop();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mySharedPreferences.getBoolean("autoflip", false)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+    @Override
+    protected void onRestart() {
+        super.onResume();
+        if (mySharedPreferences.getBoolean("autoflip", false)) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
+
+
 
     // Define the callback method that receives location updates
     @Override
