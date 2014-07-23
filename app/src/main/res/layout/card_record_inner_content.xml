@@ -15,7 +15,7 @@
         android:layout_alignParentRight="@id/colorBorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="4dp">
 
         <!-- Use same ID to use built-in features -->
         <!--<TextView-->
@@ -61,6 +61,7 @@
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/locationTitle"
                 android:layout_marginLeft="10dp"
+                android:layout_marginTop="-3dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -70,6 +71,7 @@
                 android:id="@+id/map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
                 map:uiZoomControls="false"
                 android:name="com.google.android.gms.maps.MapFragment"/>
 

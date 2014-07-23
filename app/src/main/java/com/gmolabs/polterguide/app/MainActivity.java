@@ -56,6 +56,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         com.google.android.gms.location.LocationListener {
 
     private static final int ZOOM_DEFAULT = 20;
+    private static final int POLLING_INTERVAL = 5;
     ActionBar actionBar;
     ViewPager viewPager;
     Chronometer mChrono;
@@ -87,6 +88,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     Firebase recRef;
     Firebase urlRef;
     private int nRecs = 0;
+
 
 
 
@@ -217,7 +219,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             Log.d("polterguided", "couldn't config action bar");
         }
 
-        mChrono = (Chronometer) findViewById(R.id.chronometer1);
+//        mChrono = (Chronometer) findViewById(R.id.chronometer1);
+
 
 
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -322,20 +325,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         if(soundscapeRef == null) {
 
             //set count of recordings to 0
-            nRecs = 0;
             soundscapeRef = userRef.child("TempSoundscape");
         }
         nRecs++;
 
         String recName = "TempRecording"+nRecs;
         recRef = soundscapeRef.child(recName);
-        Firebase el = recRef.child("el");
-        Firebase lat = recRef.child("lat");
-        Firebase lng = recRef.child("lng");
+
         Firebase url = recRef.child("url");
-        el.setValue(mCurrentLocation.getAltitude());
-        lat.setValue(mCurrentLocation.getLatitude());
-        lng.setValue(mCurrentLocation.getLongitude());
+
         url.setValue(recName);
 
 
@@ -374,13 +372,24 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         String soundscapeName = mCurrentAddress+", "+format;
         Toast.makeText(this, soundscapeName, Toast.LENGTH_LONG).show();
-
-
-        Firebase newRef = userRef.child(soundscapeName);
+        final Firebase newRef = userRef.child(soundscapeName);
         Firebase oldRef = userRef.child("TempSoundscape");
 
-        //TODO: copy soundscape
-        //
+        oldRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                // do some stuff once
+                newRef.setValue(snapshot.getValue());
+            }
+
+            @Override
+            public void onCancelled(FirebaseError error) {
+                System.err.println("Listener was cancelled");
+            }
+        });
+
+        //TODO: copy soundscape to new named location
+
 
         //remove old soundscape
         oldRef.removeValue();
@@ -389,6 +398,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         Log.d("DONE", "duplicated "+soundscapeName+" ref from TempSoundscape");
 //        soundscapeRef.removeValue();
 //        Log.d("polterguide", "removed temp ref");
+
+        View db = findViewById(R.id.doneButton);
+        db.setVisibility(View.GONE);
+
+
+        View ub = findViewById(R.id.undoButton);
+        ub.setVisibility(View.GONE);
+
+        nRecs = 0;
 
 
     }
@@ -423,7 +441,25 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
         mChrono = (Chronometer) findViewById(R.id.chronometer1);
-
+        mChrono.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            public void onChronometerTick(Chronometer chron) {
+//                Toast toast = Toast.makeText(getApplicationContext(), "tick", Toast.LENGTH_SHORT).show();
+                long elapsedMillis = SystemClock.elapsedRealtime() - chron.getBase();
+                int secs = (int) elapsedMillis / 1000;
+                if(secs%POLLING_INTERVAL==0) {
+                    Firebase pointRef = recRef.child(String.valueOf(secs));
+                    Log.d("CHRONO", String.valueOf(secs));
+                    Firebase el = pointRef.child("el");
+                    Firebase lat = pointRef.child("lat");
+                    Firebase lng = pointRef.child("lng");
+                    Firebase dir = pointRef.child("dir");
+                    el.setValue(mCurrentLocation.getAltitude());
+                    lat.setValue(mCurrentLocation.getLatitude());
+                    lng.setValue(mCurrentLocation.getLongitude());
+                    dir.setValue(mCurrentLocation.getBearing());
+                }
+            }
+        });
         if (on) {
             // Enable vibrate
 //            CharSequence text = "Recording";
@@ -431,7 +467,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //            toast.show();
             startRecording();
             mChrono.setBase(SystemClock.elapsedRealtime());
+
+
+
             mChrono.start();
+
 
            // getLocation();
 
@@ -777,14 +817,16 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                  * city, and country name.
                  */
                 String addressText = String.format(
-                        "%s, %s",
+//                        "%s, %s",
+                        "%s",
                         // If there's a street address, add it
 //                        address.getMaxAddressLineIndex() > 0 ?
 //                                address.getAddressLine(0) : "",
                         // Locality is usually a city
-                        address.getLocality(),
+                        address.getLocality());
+//                        address.getLocality(),
                         // The country of the address
-                        address.getCountryName());
+//                        address.getCountryName());
                 // Return the text
                 return addressText;
             } else {
