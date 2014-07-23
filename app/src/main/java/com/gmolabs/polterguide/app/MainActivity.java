@@ -45,6 +45,8 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -74,6 +76,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
     String mCurrentUser = "";
+
+    String mCurrentAddress = "";
 
     SharedPreferences mySharedPreferences;
 
@@ -314,11 +318,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
     public void startRecording() {
-        nRecs++;
         userRef = usersRef.child(mCurrentUser);
         if(soundscapeRef == null) {
+
+            //set count of recordings to 0
+            nRecs = 0;
             soundscapeRef = userRef.child("TempSoundscape");
         }
+        nRecs++;
+
         String recName = "TempRecording"+nRecs;
         recRef = soundscapeRef.child(recName);
         Firebase el = recRef.child("el");
@@ -334,6 +342,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
     public void finishRecording() {
+        //show undo and done buttons if they're not already there
+
+
+        View db = findViewById(R.id.doneButton);
+        db.setVisibility(View.VISIBLE);
+
+
+        View ub = findViewById(R.id.undoButton);
+        ub.setVisibility(View.VISIBLE);
         //wrap stuff up...
         //
         //remove fb refs...
@@ -343,6 +360,58 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
 
+
+    public void onDoneClicked(View view) {
+        //save this as a soundscape
+        //copy TempSoundscape to new ref based on address and timestamp, delete TempSoundscape
+        //TODO edit details cardflip to set title
+        // TODO and ultimately trim soundfile...
+
+
+
+        SimpleDateFormat s = new SimpleDateFormat("MMMddyyyyhhmmss");
+        String format = s.format(new Date());
+
+        String soundscapeName = mCurrentAddress+", "+format;
+        Toast.makeText(this, soundscapeName, Toast.LENGTH_LONG).show();
+
+
+        Firebase newRef = userRef.child(soundscapeName);
+        Firebase oldRef = userRef.child("TempSoundscape");
+
+        //TODO: copy soundscape
+        //
+
+        //remove old soundscape
+        oldRef.removeValue();
+
+
+        Log.d("DONE", "duplicated "+soundscapeName+" ref from TempSoundscape");
+//        soundscapeRef.removeValue();
+//        Log.d("polterguide", "removed temp ref");
+
+
+    }
+
+
+    public void onUndoClicked(View view) {
+        //save this as a soundscape
+        //copy TempSoundscape to new ref based on address and timestamp, delete TempSoundscape
+        //TODO edit details cardflip to set title
+        // TODO and ultimately trim soundfile...
+
+        Toast.makeText(this, "undo clicked", Toast.LENGTH_LONG).show();
+
+
+//        SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
+//        String format = s.format(new Date());
+//
+//        String soundscapeName = mCurrentAddress+", "+format;
+//        userRef.child(soundscapeName).setValue(soundscapeRef);
+//        soundscapeRef.removeValue();
+
+
+    }
 
 
     public void onToggleClicked(View view) {
@@ -738,6 +807,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //
             mAddress = (TextView) findViewById(R.id.locationTitle);
             mAddress.setText(address);
+            mCurrentAddress = address;
         }
     }
 }

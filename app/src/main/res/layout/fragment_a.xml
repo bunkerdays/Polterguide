@@ -27,5 +27,29 @@
         android:onClick="onToggleClicked"
         android:textOn="Stop" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/doneButtonText"
+        android:id="@+id/doneButton"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="30dp"
+        android:onClick="onDoneClicked"
+        android:visibility="gone"
+        android:layout_marginBottom="45dp" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/undoButtonText"
+        android:id="@+id/undoButton"
+        android:layout_gravity="left|bottom"
+        android:layout_marginBottom="45dp"
+        android:onClick="onUndoClicked"
+        android:visibility="gone"
+        android:layout_marginLeft="30dp" />
+
 
 </FrameLayout>

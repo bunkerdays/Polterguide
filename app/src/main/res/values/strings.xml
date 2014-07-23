@@ -81,6 +81,8 @@
     <string name="signup_title">Create Username</string>
     <string name="signup_message">This will be your Polterguide user name.</string>
     <string name="ok">ok</string>
+    <string name="doneButtonText">Done</string>
+    <string name="undoButtonText">Undo</string>
 
 
 </resources>
