@@ -370,16 +370,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         SimpleDateFormat s = new SimpleDateFormat("MMMddyyyyhhmmss");
         String format = s.format(new Date());
 
-        String soundscapeName = mCurrentAddress+", "+format;
+        final String soundscapeName = mCurrentAddress+", "+format;
         Toast.makeText(this, soundscapeName, Toast.LENGTH_LONG).show();
         final Firebase newRef = userRef.child(soundscapeName);
         Firebase oldRef = userRef.child("TempSoundscape");
+        final Firebase soundScapeListRef = userRef.child("soundscapes");
 
         oldRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 // do some stuff once
                 newRef.setValue(snapshot.getValue());
+                soundScapeListRef.child(soundscapeName).setValue("public");
             }
 
             @Override

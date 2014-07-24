@@ -1,14 +1,12 @@
 package com.gmolabs.polterguide.app;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 
 
 /**
@@ -16,13 +14,28 @@ import com.firebase.client.ValueEventListener;
  *
  */
 public class FragmentB extends android.support.v4.app.ListFragment {
+
+    Firebase mRef;
+    Firebase userRef;
+    Firebase listRef;
+    String mCurrentUser;
+    SharedPreferences p;
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-
-
-
-
         super.onActivityCreated(savedInstanceState);
+
+//        Context mContext = getActivity().getApplicationContext();
+//        p = PreferenceManager.getDefaultSharedPreferences(mContext);
+//        mCurrentUser = p.getString("username", "NO_USER");
+//
+//        mRef = new Firebase("https://polterguide.firebaseio.com/");
+//        userRef = mRef.child("users/"+mCurrentUser);
+
+
+
+
+
 
         String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
