@@ -2,6 +2,7 @@ package com.gmolabs.polterguide.app;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -26,17 +27,13 @@ public class FragmentB extends android.support.v4.app.ListFragment {
         super.onActivityCreated(savedInstanceState);
 
 //        Context mContext = getActivity().getApplicationContext();
-//        p = PreferenceManager.getDefaultSharedPreferences(mContext);
-//        mCurrentUser = p.getString("username", "NO_USER");
-//
-//        mRef = new Firebase("https://polterguide.firebaseio.com/");
-//        userRef = mRef.child("users/"+mCurrentUser);
+        p = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        mCurrentUser = p.getString("username", "NO_USER");
 
 
-
-
-
-
+        mRef = new Firebase("https://polterguide.firebaseio.com/");
+        userRef = mRef.child("users/"+mCurrentUser);
+        listRef = userRef.child("soundscapes");
         String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
                 "Linux", "OS/2",  "Android", "iPhone", "WindowsMobile",

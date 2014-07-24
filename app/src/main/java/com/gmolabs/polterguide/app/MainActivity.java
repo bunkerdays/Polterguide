@@ -47,8 +47,10 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener, GooglePlayServicesClient.ConnectionCallbacks,
@@ -77,11 +79,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
     String mCurrentUser = "";
-
+    String mUserId = "";
     String mCurrentAddress = "";
+    String mSoundscapeRefName = "";
 
     SharedPreferences mySharedPreferences;
 
+    Firebase mRef;
+    Firebase scapesRef;
+    Firebase listRef;
     Firebase usersRef;
     Firebase userRef;
     Firebase soundscapeRef;
@@ -137,6 +143,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         }
 
+        mRef = new Firebase("https://polterguide.firebaseio.com");
+        scapesRef = mRef.child("scapes");
+        usersRef = mRef.child("users");
+        mUserId = mySharedPreferences.getString("userId", "NO_USER");
         //setUpMapIfNeeded();
     }
 
@@ -321,23 +331,44 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
     public void startRecording() {
-        userRef = usersRef.child(mCurrentUser);
-        if(soundscapeRef == null) {
 
-            //set count of recordings to 0
-            soundscapeRef = userRef.child("TempSoundscape");
+        View db = findViewById(R.id.doneButton);
+        db.setVisibility(View.GONE);
+
+
+        View ub = findViewById(R.id.undoButton);
+        ub.setVisibility(View.GONE);
+
+        userRef = usersRef.child(mUserId);
+        if(soundscapeRef == null) {
+            soundscapeRef = scapesRef.push();
+            Map<String, Object> toSet = new HashMap<String, Object>();
+            toSet.put("userId", mUserId);
+            toSet.put("location", mCurrentAddress);
+            SimpleDateFormat s = new SimpleDateFormat("MMMddyyyyhhmmss");
+            String scapeDate = s.format(new Date());
+            toSet.put("timestamp",scapeDate );
+            soundscapeRef.child("meta").setValue(toSet);
+            mSoundscapeRefName = soundscapeRef.getName();
+            listRef = userRef.child("scapes").push();
+            toSet = new HashMap<String, Object>();
+            toSet.put("scapeName", mSoundscapeRefName);
+            toSet.put("scapeLoc", mCurrentAddress);
+;           listRef.setValue(toSet);
         }
         nRecs++;
 
-        String recName = "TempRecording"+nRecs;
-        recRef = soundscapeRef.child(recName);
 
-        Firebase url = recRef.child("url");
+//        String recName = "TempRecording"+nRecs;
+        recRef = soundscapeRef.push();
 
-        url.setValue(recName);
+//        Firebase urlRef = recRef.child("url");
+//
+//        urlRef.setValue(recName);
 
 
     }
+
 
     public void finishRecording() {
         //show undo and done buttons if they're not already there
@@ -367,39 +398,48 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
 
 
-        SimpleDateFormat s = new SimpleDateFormat("MMMddyyyyhhmmss");
-        String format = s.format(new Date());
-
-        final String soundscapeName = mCurrentAddress+", "+format;
-        Toast.makeText(this, soundscapeName, Toast.LENGTH_LONG).show();
-        final Firebase newRef = userRef.child(soundscapeName);
-        Firebase oldRef = userRef.child("TempSoundscape");
-        final Firebase soundScapeListRef = userRef.child("soundscapes");
-
-        oldRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                // do some stuff once
-                newRef.setValue(snapshot.getValue());
-                soundScapeListRef.child(soundscapeName).setValue("public");
-            }
-
-            @Override
-            public void onCancelled(FirebaseError error) {
-                System.err.println("Listener was cancelled");
-            }
-        });
-
-        //TODO: copy soundscape to new named location
+//        SimpleDateFormat s = new SimpleDateFormat("MMMddyyyyhhmmss");
+        SimpleDateFormat fmonth = new SimpleDateFormat("MMM");
+        SimpleDateFormat fday = new SimpleDateFormat("dd");
+        SimpleDateFormat fyear = new SimpleDateFormat("yyyy");
+        SimpleDateFormat ftime = new SimpleDateFormat("hh:mm:ss a");
 
 
-        //remove old soundscape
-        oldRef.removeValue();
 
 
-        Log.d("DONE", "duplicated "+soundscapeName+" ref from TempSoundscape");
-//        soundscapeRef.removeValue();
-//        Log.d("polterguide", "removed temp ref");
+        String format = " "+ fmonth.format(new Date())+" "+fday.format(new Date())+", "+fyear.format(new Date())+" at "+ftime.format(new Date());
+
+//        final String soundscapeName = mCurrentAddress+", "+format;
+//        Toast.makeText(this, soundscapeName, Toast.LENGTH_LONG).show();
+//        final Firebase newRef = userRef.child(soundscapeName);
+//        Firebase oldRef = userRef.child("TempSoundscape");
+//        final Firebase soundScapeListRef = userRef.child("soundscapes");
+
+//        oldRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot snapshot) {
+//                // do some stuff once
+//                newRef.setValue(snapshot.getValue());
+//                soundScapeListRef.child(soundscapeName).setValue("public");
+//            }
+//
+//            @Override
+//            public void onCancelled(FirebaseError error) {
+//                System.err.println("Listener was cancelled");
+//            }
+//        });
+//
+//        //TODO: copy soundscape to new named location
+//
+//
+//        //remove old soundscape
+//        oldRef.removeValue();
+
+
+//        Log.d("DONE", "duplicated "+soundscapeName+" ref from TempSoundscape");
+////        soundscapeRef.removeValue();
+////        Log.d("polterguide", "removed temp ref");
+        soundscapeRef = null;
 
         View db = findViewById(R.id.doneButton);
         db.setVisibility(View.GONE);

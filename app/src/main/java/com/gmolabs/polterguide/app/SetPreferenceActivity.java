@@ -8,12 +8,16 @@ import android.preference.PreferenceManager;
 
 import com.firebase.client.Firebase;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by geoffmorris on 7/5/14.
  */
 public class SetPreferenceActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     SharedPreferences p;
+    boolean newUser = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +58,25 @@ public class SetPreferenceActivity extends Activity implements SharedPreferences
         } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
-        Firebase usersRef = new Firebase("https://polterguide.firebaseio.com/users/");
-        Firebase userRef = usersRef.child(myUser);
-        userRef.child("pwd").setValue(myPass);
-        // do stuff
+
+        if(newUser) {
+
+            newUser = false;
+            Firebase usersRef = new Firebase("https://polterguide.firebaseio.com/users/");
+            Firebase userRef = usersRef.push();
+            String userId = userRef.getName();
+
+            Map<String, Object> toSet = new HashMap<String, Object>();
+            toSet.put("username", myUser);
+            toSet.put("password", myPass);
+
+            userRef.setValue(toSet);
+
+            SharedPreferences.Editor editor1 = sharedPreferences.edit();
+            editor1.putString("userId", userId);
+            editor1.commit(); //add unique firebase id to shared preferences for easy reference
+        }// do stuff
+
     }
 
 
