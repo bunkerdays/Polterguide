@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Stack;
 
 
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener, GooglePlayServicesClient.ConnectionCallbacks,
@@ -92,7 +93,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     Firebase userRef;
     Firebase soundscapeRef;
     Firebase recRef;
+    Firebase lastRef;
     Firebase urlRef;
+
+    Stack<String> recIds;
+
     private int nRecs = 0;
 
 
@@ -148,6 +153,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         usersRef = mRef.child("users");
         mUserId = mySharedPreferences.getString("userId", "NO_USER");
         //setUpMapIfNeeded();
+
+        recIds = new Stack<String>();
     }
 
     public void setCurrentUser(String u) {
@@ -328,8 +335,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
     }
 
-
-
     public void startRecording() {
 
         View db = findViewById(R.id.doneButton);
@@ -342,6 +347,37 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         userRef = usersRef.child(mUserId);
         if(soundscapeRef == null) {
             soundscapeRef = scapesRef.push();
+//            soundscapeRef.addChildEventListener(new ChildEventListener() {
+//                @Override
+//                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+//                    //lastRef = dataSnapshot.getRef();
+//                    recIds.push(dataSnapshot.getRef().getName());
+//                }
+//
+//                @Override
+//                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+//
+//                }
+//
+//                @Override
+//                public void onChildRemoved(DataSnapshot snapshot) {
+//                    //String title = (String) snapshot.child("title").getValue();
+////                    System.out.println("The blog post titled " + title + " has been deleted");
+//                    recIds.pop();
+//
+//
+//                }
+//
+//                @Override
+//                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+//
+//                }
+//
+//                @Override
+//                public void onCancelled(FirebaseError firebaseError) {
+//
+//                }
+//            });
             Map<String, Object> toSet = new HashMap<String, Object>();
             toSet.put("userId", mUserId);
             toSet.put("location", mCurrentAddress);
@@ -358,17 +394,29 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         }
         nRecs++;
 
-
-//        String recName = "TempRecording"+nRecs;
         recRef = soundscapeRef.push();
+        recIds.push(recRef.getName());
+//        prevRef = recRef;
+        // ....
+
+// Get the data on a post that has been removed
+
+
 
 //        Firebase urlRef = recRef.child("url");
 //
 //        urlRef.setValue(recName);
-
-
     }
 
+
+    private void hideButtons() {
+        View db = findViewById(R.id.doneButton);
+        db.setVisibility(View.GONE);
+
+
+        View ub = findViewById(R.id.undoButton);
+        ub.setVisibility(View.GONE);
+    }
 
     public void finishRecording() {
         //show undo and done buttons if they're not already there
@@ -380,6 +428,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 
         View ub = findViewById(R.id.undoButton);
         ub.setVisibility(View.VISIBLE);
+
+//        recRef = null;
         //wrap stuff up...
         //
         //remove fb refs...
@@ -388,27 +438,18 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         //nRecs = 0;
     }
 
-
-
     public void onDoneClicked(View view) {
         //save this as a soundscape
         //copy TempSoundscape to new ref based on address and timestamp, delete TempSoundscape
         //TODO edit details cardflip to set title
         // TODO and ultimately trim soundfile...
-
-
-
 //        SimpleDateFormat s = new SimpleDateFormat("MMMddyyyyhhmmss");
         SimpleDateFormat fmonth = new SimpleDateFormat("MMM");
         SimpleDateFormat fday = new SimpleDateFormat("dd");
         SimpleDateFormat fyear = new SimpleDateFormat("yyyy");
         SimpleDateFormat ftime = new SimpleDateFormat("hh:mm:ss a");
 
-
-
-
         String format = " "+ fmonth.format(new Date())+" "+fday.format(new Date())+", "+fyear.format(new Date())+" at "+ftime.format(new Date());
-
 //        final String soundscapeName = mCurrentAddress+", "+format;
 //        Toast.makeText(this, soundscapeName, Toast.LENGTH_LONG).show();
 //        final Firebase newRef = userRef.child(soundscapeName);
@@ -434,16 +475,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 //
 //        //remove old soundscape
 //        oldRef.removeValue();
-
-
+//
+//
 //        Log.d("DONE", "duplicated "+soundscapeName+" ref from TempSoundscape");
-////        soundscapeRef.removeValue();
-////        Log.d("polterguide", "removed temp ref");
+//        soundscapeRef.removeValue();
+//        Log.d("polterguide", "removed temp ref");
         soundscapeRef = null;
 
         View db = findViewById(R.id.doneButton);
         db.setVisibility(View.GONE);
-
 
         View ub = findViewById(R.id.undoButton);
         ub.setVisibility(View.GONE);
@@ -451,26 +491,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         nRecs = 0;
 
 
+        //allocate a new fresh stack to hold recording ids
+        recIds = new Stack<String>();
     }
 
-
     public void onUndoClicked(View view) {
-        //save this as a soundscape
-        //copy TempSoundscape to new ref based on address and timestamp, delete TempSoundscape
-        //TODO edit details cardflip to set title
-        // TODO and ultimately trim soundfile...
-
-        Toast.makeText(this, "undo clicked", Toast.LENGTH_LONG).show();
-
-
-//        SimpleDateFormat s = new SimpleDateFormat("ddMMyyyyhhmmss");
-//        String format = s.format(new Date());
-//
-//        String soundscapeName = mCurrentAddress+", "+format;
-//        userRef.child(soundscapeName).setValue(soundscapeRef);
-//        soundscapeRef.removeValue();
-
-
+        //remove last child of current soundscape...
+        if(recIds.empty()) {
+        } else {
+            String myId = recIds.pop();
+            soundscapeRef.child(myId).removeValue();
+            if(recIds.empty()) {
+                soundscapeRef.removeValue();
+                soundscapeRef = null;
+                hideButtons();
+            }
+        }
     }
 
 
