@@ -195,8 +195,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
     }
 
 
-
-
     // Define the callback method that receives location updates
     @Override
     public void onLocationChanged(Location location) {
@@ -381,6 +379,8 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
             Map<String, Object> toSet = new HashMap<String, Object>();
             toSet.put("userId", mUserId);
             toSet.put("location", mCurrentAddress);
+            toSet.put("lng", mCurrentLocation.getLongitude());
+            toSet.put("lat", mCurrentLocation.getLatitude());
             SimpleDateFormat s = new SimpleDateFormat("MMMddyyyyhhmmss");
             String scapeDate = s.format(new Date());
             toSet.put("timestamp",scapeDate );
@@ -895,13 +895,15 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                  * city, and country name.
                  */
                 String addressText = String.format(
-//                        "%s, %s",
-                        "%s",
+                        "%s, %s",
+//                        "%s",
                         // If there's a street address, add it
 //                        address.getMaxAddressLineIndex() > 0 ?
 //                                address.getAddressLine(0) : "",
                         // Locality is usually a city
-                        address.getLocality());
+                        address.getLocality(),
+                        address.getAdminArea());
+
 //                        address.getLocality(),
                         // The country of the address
 //                        address.getCountryName());
