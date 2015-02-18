@@ -1,11 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="350dp"
-    >
+    android:background="#000000">
 
     <ImageView
         android:id="@+id/colorBorder"
-        android:background="@drawable/card_background"
+        android:background="#000000"
         android:layout_width="10dp"
         android:layout_height="@dimen/card_base_empty_height"/>
 
@@ -15,7 +15,8 @@
         android:layout_alignParentRight="@id/colorBorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp">
+        android:layout_marginTop="4dp"
+        android:background="#000000">
 
         <!-- Use same ID to use built-in features -->
         <!--<TextView-->
@@ -36,32 +37,37 @@
             <!--android:textSize="40dp"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"/>-->
-        <Chronometer
-            android:id="@+id/chronometer1"
-            android:textSize="40dp"
-            android:layout_marginLeft="10dp"
-            android:textColor="@android:color/secondary_text_dark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/chronometer1">
+            android:layout_height="wrap_content">
+            <!--android:layout_below="@id/chronometer1">-->
 
             <!--<ImageView-->
                 <!--android:id="@+id/recPin"-->
                 <!--android:layout_width="16dp"-->
                 <!--android:layout_height="16dp"-->
                 <!--android:src="@drawable/ic_map_pin"/>-->
+            <Chronometer
+                android:id="@+id/chronometer1"
+                android:textSize="20dp"
+                android:layout_marginLeft="10dp"
+                android:textColor="@android:color/secondary_text_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-thin"
+                android:background="#000000" />
 
             <TextView
                 style="@android:style/TextAppearance.DeviceDefault.Small"
                 android:textColor="@android:color/darker_gray"
                 android:id="@+id/locationTitle"
+                android:textSize="20dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="-3dp"
+                android:layout_toRightOf="@id/chronometer1"
+                android:fontFamily="sans-serif-thin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -71,7 +77,7 @@
                 android:id="@+id/map"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 map:uiZoomControls="false"
                 android:name="com.google.android.gms.maps.MapFragment"/>
 

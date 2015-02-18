@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ccccaa"
+    android:background="#000000"
     tools:context="com.gmolabs.polterguide.app.FragmentA">
 
     <!-- TODO: Update blank fragment layout -->
